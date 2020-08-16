@@ -6,12 +6,7 @@ if (workbox) {
   console.log(`Boo! Workbox didn't load 😬`);
 }
 
-//import {registerRoute} from 'workbox-routing';
-//import {NetworkFirst} from 'workbox-strategies';
-
-
 workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
-
 
 workbox.routing.registerRoute(
   ({request}) => request.destination === 'lib',
