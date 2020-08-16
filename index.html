@@ -13,12 +13,11 @@
   </head>
 
   <body style="margin: 0; padding: 0; width: 100%; height: 100%"></body>
-  <button id="permButton" onclick="permission();">OrientationAccess ok?</button>
+    <button id="permButton" onclick="permission();">OrientationAccess ok?</button>
 
 
   <script>
   /*** WepApp PART ***/
-
   // Check that service workers are supported
   if ('serviceWorker' in navigator) {
     // Use the window load event to keep the page load performant
@@ -26,7 +25,6 @@
       navigator.serviceWorker.register('sw.js');
     });
   }
-
   </script>
 
 
@@ -269,7 +267,7 @@
         //ball.position.x += gamma;
         //ball.position.y -= beta;
       }
-      renderer.render(scene, camera);
+      //renderer.render(scene, camera);
     }
     window.addEventListener("deviceorientation", handleOrientation, true);
   </script>
