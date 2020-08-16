@@ -1,0 +1,28 @@
+{
+  "name": "handyball-ds",
+  "version": "0.1.3",
+  "description": "A PWA-Demo Game for Smartphones & Tablets",
+  "main": "index.html",
+  "directories": {
+    "lib": "lib"
+  },
+  "dependencies": {
+    "basic-ftp": "^4.6.2"
+  },
+  "devDependencies": {
+    "workbox-build": "^5.1.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dstegen/handyball-ds.git"
+  },
+  "author": "D. & D. Stegen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dstegen/handyball-ds/issues"
+  },
+  "homepage": "https://github.com/dstegen/handyball-ds#readme"
+}
