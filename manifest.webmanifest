@@ -1,0 +1,14 @@
+{
+  "name": "HandyBall PWA-Demo",
+  "short_name": "HandyBall",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "lib/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
