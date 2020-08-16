@@ -9,6 +9,7 @@ data*
 *.tgz
 
 # internal files
+build_upload.js
 roadmap.md
 sessionids.json
 
