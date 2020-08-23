@@ -12,171 +12,175 @@
   </head>
 
   <body style="margin: 0; padding: 0; width: 100%; height: 100%"></body>
-    <button id="permButton" onclick="permission();">OrientationAccess ok?</button>
 
-
-  <script>
-  /*** WepApp PART ***/
-  // Check that service workers are supported
-  if ('serviceWorker' in navigator) {
-    // Use the window load event to keep the page load performant
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js');
-    });
-  }
-  </script>
-
-
-  <script src="/lib/three.js"></script>
-  <script src="/lib/physi.js"></script>
-  <script src="/game/addLights.js"></script>
-  <script src="/game/addBall.js"></script>
-  <script src="/game/addBoard1.js"></script>
-  <script src="/game/addBoard2.js"></script>
-
-  <script>
-    /*** 3D PART  ***/
-    // Physics settings
-    Physijs.scripts.ammo = '/lib/ammo.js';
-    Physijs.scripts.worker = '/lib/physijs_worker.js';
-
-    // The "scene" is where stuff in our game will happen:
-    var scene = new Physijs.Scene();
-    scene.setGravity(new THREE.Vector3( 0, -100, 0 ));
-    var flat = {flatShading: true};
-    var light = new THREE.AmbientLight('white', 0.2);
-    scene.add(light);
-
-    // The "camera" is what sees the stuff:
-    var aspectRatio = window.innerWidth / window.innerHeight;
-    var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
-    camera.position.z = 500;
-    scene.add(camera);
-
-    // The "renderer" draws what the camera sees onto the screen:
-    var renderer = new THREE.WebGLRenderer({antialias: true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    camera.position.set(0, 100, 200);
-    camera.lookAt(new THREE.Vector3(0, 0, 0));
-    renderer.shadowMap.enabled = true;
-
-    // ******** START CODING ON THE NEXT LINE ********
-
-    var lights = addLights(scene);
-    var ball = addBall(scene);
-    var board = addBoard1(scene);
-    //var goal = addGoal();
-    var level = 0;
-
-
-    function reset(ball) {
-      ball.__dirtyPosition = true;
-      ball.dirtyRotation = true;
-      ball.position.set(-33, 200, -65);
-      ball.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-      ball.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-      if (level === 0) {
-        scene.remove(scene.getObjectByName('board1'));
-        board = addBoard2(scene);
-        level = 1;
-      } else {
-        scene.remove(scene.getObjectByName('board2'));
-        board = addBoard1(scene);
-        level = 0;
+    <script>
+      function hideIntroScreen () {
+        document.getElementById('introScreen').style.display = 'none';
       }
-      board.__dirtyRotation = true;
-      board.rotation.set(0.1, 0, 0);
-    }
+    </script>
+    <div id="introScreen" style="height: 100vH; background-color: blue; padding: 50px; text-align: center;">
+      <h1 style="color: white; font-family: helvetica, arial, sans-serif;">HandyBall</h1>
+      <button id="permButton" onclick="permission();">OrientationAccess ok?</button>
+      <br /><br />
+      <button onclick="hideIntroScreen()">Start game</button>
+    </div>
 
-
-    // Animate motion in the game
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // Run physics
-    function gameStep() {
-      if (ball.position.y < -250) {
-        reset(ball);
+    <script>
+      /*** WepApp PART ***/
+      // Check that service workers are supported
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('sw.js');
+        });
       }
-      scene.simulate();
-      // Update physics 60 times a second so that motion is smooth
-      setTimeout(gameStep, 1000/60);
-    }
-    gameStep();
+    </script>
 
-    // Keyboard controlls
-    document.addEventListener("keydown", sendKeyDown);
+    <script src="/lib/three.js"></script>
+    <script src="/lib/physi.js"></script>
+    <script src="/game/addLights.js"></script>
+    <script src="/game/addBall.js"></script>
+    <script src="/game/addBoard1.js"></script>
+    <script src="/game/addBoard2.js"></script>
 
-    function sendKeyDown(event){
-      var code = event.code;
-      if (code == 'ArrowLeft') left();
-      if (code == 'ArrowRight') right();
-      if (code == 'ArrowUp') up();
-      if (code == 'ArrowDown') down();
-    }
+    <script>
+      /*** 3D PART  ***/
+      // Physics settings
+      Physijs.scripts.ammo = '/lib/ammo.js';
+      Physijs.scripts.worker = '/lib/physijs_worker.js';
 
-    function left() { tilt('z', 0.05); }
-    function right() { tilt('z', -0.05); }
-    function up() { tilt('x', -0.05); }
-    function down() {tilt('x', 0.05); }
+      // The "scene" is where stuff in our game will happen:
+      var scene = new Physijs.Scene();
+      scene.setGravity(new THREE.Vector3( 0, -100, 0 ));
+      var flat = {flatShading: true};
+      var light = new THREE.AmbientLight('white', 0.2);
+      scene.add(light);
 
-    function tilt(dir, amount) {
-      board.__dirtyRotation = true
-      board.rotation[dir] = board.rotation[dir] + amount;
-    }
+      // The "camera" is what sees the stuff:
+      var aspectRatio = window.innerWidth / window.innerHeight;
+      var camera = new THREE.PerspectiveCamera(75, aspectRatio, 1, 10000);
+      camera.position.z = 500;
+      scene.add(camera);
 
-  </script>
+      // The "renderer" draws what the camera sees onto the screen:
+      var renderer = new THREE.WebGLRenderer({antialias: true});
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
 
+      camera.position.set(0, 100, 200);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
+      renderer.shadowMap.enabled = true;
 
-  <script>
-    /*** DeviceOrientation PART ***/
-    function permission () {
-      if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
-          // (optional) Do something before API request prompt.
-          DeviceMotionEvent.requestPermission().then( response => {
-              // (optional) Do something after API prompt dismissed.
-              if ( response == "granted" ) {
-                  document.getElementById('permButton').style.display ='none';
-              }
-          }).catch( console.error )
-      } else {
-          alert( "Sorry, DeviceMotionEvent is not defined!" );
+      // ******** START CODING ON THE NEXT LINE ********
+
+      var lights = addLights(scene);
+      var ball = addBall(scene);
+      var board = addBoard1(scene);
+      //var goal = addGoal();
+      var level = 0;
+
+      function reset(ball) {
+        ball.__dirtyPosition = true;
+        ball.dirtyRotation = true;
+        ball.position.set(-33, 200, -65);
+        ball.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+        ball.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+        if (level === 0) {
+          scene.remove(scene.getObjectByName('board1'));
+          board = addBoard2(scene);
+          level = 1;
+        } else {
+          scene.remove(scene.getObjectByName('board2'));
+          board = addBoard1(scene);
+          level = 0;
+        }
+        board.__dirtyRotation = true;
+        board.rotation.set(0.1, 0, 0);
       }
-    }
-    function handleOrientation(event) {
-      var absolute = event.absolute;
-      var alpha    = event.alpha;
-      var beta     = event.beta;
-      var gamma    = event.gamma;
-      //alert(absolute);
-      // Do stuff with the new orientation data
-      if (window.orientation === 90) {
-        // Landscape
-        tilt('z', -beta/900);
-        tilt('x', -gamma/900);
-        //ball.position.x += beta;
-        //ball.position.y += gamma;
-      } else if (window.orientation === -90) {
-        tilt('z', beta/900);
-        tilt('x', gamma/900);
-      } else if (window.orientation === 180) {
-        tilt('z', gamma/900);
-        tilt('x', -beta/900);
-      } else {
-      	// Portrait
-        tilt('z', -gamma/900);
-        tilt('x', beta/900);
-        //ball.position.x += gamma;
-        //ball.position.y -= beta;
+
+      // Animate motion in the game
+      function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
       }
-      //renderer.render(scene, camera);
-    }
-    window.addEventListener("deviceorientation", handleOrientation, true);
-  </script>
+      animate();
+
+      // Run physics
+      function gameStep() {
+        if (ball.position.y < -250) {
+          reset(ball);
+        }
+        scene.simulate();
+        // Update physics 60 times a second so that motion is smooth
+        setTimeout(gameStep, 1000/60);
+      }
+      gameStep();
+
+      // Keyboard controlls
+      document.addEventListener("keydown", sendKeyDown);
+
+      function sendKeyDown(event){
+        var code = event.code;
+        if (code == 'ArrowLeft') left();
+        if (code == 'ArrowRight') right();
+        if (code == 'ArrowUp') up();
+        if (code == 'ArrowDown') down();
+      }
+
+      function left() { tilt('z', 0.05); }
+      function right() { tilt('z', -0.05); }
+      function up() { tilt('x', -0.05); }
+      function down() {tilt('x', 0.05); }
+
+      function tilt(dir, amount) {
+        board.__dirtyRotation = true
+        board.rotation[dir] = board.rotation[dir] + amount;
+      }
+    </script>
+
+    <script>
+      /*** DeviceOrientation PART ***/
+      function permission () {
+        if ( typeof( DeviceMotionEvent ) !== "undefined" && typeof( DeviceMotionEvent.requestPermission ) === "function" ) {
+            // (optional) Do something before API request prompt.
+            DeviceMotionEvent.requestPermission().then( response => {
+                // (optional) Do something after API prompt dismissed.
+                if ( response == "granted" ) {
+                    document.getElementById('permButton').style.display ='none';
+                }
+            }).catch( console.error )
+        } else {
+            alert( "DeviceMotionEvent is not defined!" );
+        }
+      }
+      function handleOrientation(event) {
+        var absolute = event.absolute;
+        var alpha    = event.alpha;
+        var beta     = event.beta;
+        var gamma    = event.gamma;
+        // Do stuff with the new orientation data
+        if (window.orientation === 90) {
+          // Landscape
+          tilt('z', -beta/900);
+          tilt('x', -gamma/900);
+          //ball.position.x += beta;
+          //ball.position.y += gamma;
+        } else if (window.orientation === -90) {
+          tilt('z', beta/900);
+          tilt('x', gamma/900);
+        } else if (window.orientation === 180) {
+          tilt('z', gamma/900);
+          tilt('x', -beta/900);
+        } else {
+        	// Portrait
+          tilt('z', -gamma/900);
+          tilt('x', beta/900);
+          //ball.position.x += gamma;
+          //ball.position.y -= beta;
+        }
+        //renderer.render(scene, camera);
+      }
+      window.addEventListener("deviceorientation", handleOrientation, true);
+    </script>
 
 </html>
