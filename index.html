@@ -14,15 +14,22 @@
   <body style="margin: 0; padding: 0; width: 100%; height: 100%"></body>
 
     <script>
-      function hideIntroScreen () {
+      function hideIntroScreen (game) {
         document.getElementById('introScreen').style.display = 'none';
+        if (game === 1) {
+          document.body.appendChild(renderer2.domElement);
+        } else {
+          startGame();
+        }
       }
     </script>
     <div id="introScreen" style="height: 100vH; background-color: blue; padding: 50px; text-align: center;">
       <h1 style="color: white; font-family: helvetica, arial, sans-serif;">HandyBall</h1>
       <button id="permButton" onclick="permission();">OrientationAccess ok?</button>
       <br /><br />
-      <button onclick="hideIntroScreen()">Start game</button>
+      <button onclick="hideIntroScreen(0)">Start BalanceBoard</button>
+      <br /><br />
+      <button onclick="hideIntroScreen(1)">Start BlueBall</button>
     </div>
 
     <script>
@@ -38,6 +45,7 @@
 
     <script src="/lib/three.js"></script>
     <script src="/lib/physi.js"></script>
+    <script src="/game/blueball.js"></script>
     <script src="/game/addLights.js"></script>
     <script src="/game/addBall.js"></script>
     <script src="/game/addBoard1.js"></script>
@@ -65,7 +73,7 @@
       // The "renderer" draws what the camera sees onto the screen:
       var renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+      //document.body.appendChild(renderer.domElement);
 
       camera.position.set(0, 100, 200);
       camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -86,16 +94,26 @@
         ball.setLinearVelocity(new THREE.Vector3(0, 0, 0));
         ball.setAngularVelocity(new THREE.Vector3(0, 0, 0));
         if (level === 0) {
-          scene.remove(scene.getObjectByName('board1'));
-          board = addBoard2(scene);
+          if (scene.getObjectByName('board1')) {
+            scene.remove(scene.getObjectByName('board1'));
+            board = addBoard2(scene);
+          }
           level = 1;
         } else {
-          scene.remove(scene.getObjectByName('board2'));
-          board = addBoard1(scene);
+          if (scene.getObjectByName('board2')) {
+            scene.remove(scene.getObjectByName('board2'));
+            board = addBoard1(scene);
+          }
           level = 0;
         }
         board.__dirtyRotation = true;
         board.rotation.set(0.1, 0, 0);
+      }
+
+      function startGame () {
+        level = 1;
+        reset(ball);
+        document.body.appendChild(renderer.domElement);
       }
 
       // Animate motion in the game
@@ -153,6 +171,7 @@
             alert( "DeviceMotionEvent is not defined!" );
         }
       }
+
       function handleOrientation(event) {
         var absolute = event.absolute;
         var alpha    = event.alpha;
