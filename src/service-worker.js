@@ -14,6 +14,11 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
+  ({request}) => request.destination === 'game',
+  new workbox.strategies.CacheFirst()
+);
+
+workbox.routing.registerRoute(
   ({request}) => request.destination === 'https://pwa.danielstegen.de/',
   new workbox.strategies.NetworkFirst()
 );
